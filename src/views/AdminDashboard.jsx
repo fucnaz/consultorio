@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { dbService } from "../firebase/dbService";
 import AppointmentModal from "../components/AppointmentModal";
 import DoctorScheduleModal from "../components/DoctorScheduleModal";
+import AddDoctorModal from "../components/AddDoctorModal";
 import { 
   Calendar, 
   Users, 
@@ -37,6 +38,9 @@ export default function AdminDashboard() {
 
   // Edición de agenda de doctores
   const [editingDoctorSchedule, setEditingDoctorSchedule] = useState(null);
+
+  // Creación de nuevo especialista
+  const [isAddingDoctor, setIsAddingDoctor] = useState(false);
 
   const fetchData = async () => {
     setLoading(true);
@@ -83,6 +87,11 @@ export default function AdminDashboard() {
   const handleSaveDoctorSchedule = (updatedDoctor) => {
     setDoctors(doctors.map(d => d.id === updatedDoctor.id ? { ...d, ...updatedDoctor } : d));
     setEditingDoctorSchedule(null);
+  };
+
+  const handleSaveNewDoctor = (newDoctor) => {
+    setDoctors([...doctors, newDoctor]);
+    setIsAddingDoctor(false);
   };
 
   const formatWeeklyAgendaSummary = (agenda) => {
@@ -400,6 +409,16 @@ export default function AdminDashboard() {
 
         {activeTab === "doctors" && (
           <div className="doctors-view animate-fade">
+            <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "1.5rem" }}>
+              <button
+                onClick={() => setIsAddingDoctor(true)}
+                className="btn btn-accent"
+                style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+              >
+                <UserPlus size={18} />
+                Agregar Especialista
+              </button>
+            </div>
             <div className="doctors-stats-grid">
               {doctors.map(doc => {
                 const docAppointments = appointments.filter(a => a.especialistaId === doc.id);
@@ -469,6 +488,13 @@ export default function AdminDashboard() {
           doctor={editingDoctorSchedule}
           onClose={() => setEditingDoctorSchedule(null)}
           onSave={handleSaveDoctorSchedule}
+        />
+      )}
+
+      {isAddingDoctor && (
+        <AddDoctorModal
+          onClose={() => setIsAddingDoctor(false)}
+          onSave={handleSaveNewDoctor}
         />
       )}
 
