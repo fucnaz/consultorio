@@ -318,7 +318,7 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
 
     const appointmentData = {
       especialistaId: selectedDoctorId,
-      especialidad,
+      especialidad: specialty,
       fecha: selectedDate,
       hora: selectedTime,
       pacienteNombre: patientName,
