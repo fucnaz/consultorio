@@ -5,19 +5,19 @@ import { Calendar, Award, ShieldCheck, Heart } from "lucide-react";
 export default function VideoHero({ onNavigateToBooking }) {
   return (
     <div className="hero-section">
-      <video 
-        className="hero-video" 
-        autoPlay 
-        loop 
-        muted 
+      <video
+        className="hero-video"
+        autoPlay
+        loop
+        muted
         playsInline
       >
         <source src="/assets/video/header.webm" type="video/webm" />
         Tu navegador no soporta videos HTML5.
       </video>
-      
+
       <div className="hero-overlay"></div>
-      
+
       <div className="container hero-container">
         <div className="hero-content">
           <span className="hero-badge">
@@ -29,8 +29,8 @@ export default function VideoHero({ onNavigateToBooking }) {
             Brindamos un enfoque integral y personalizado para cada miembro de tu familia. Agenda tu turno online de forma rápida con nuestros especialistas calificados.
           </p>
           <div className="hero-actions">
-            <button 
-              onClick={onNavigateToBooking} 
+            <button
+              onClick={onNavigateToBooking}
               className="btn btn-primary btn-lg"
             >
               <Calendar size={20} />
@@ -54,7 +54,7 @@ export default function VideoHero({ onNavigateToBooking }) {
             <ShieldCheck className="feature-icon" />
             <div>
               <h3>Seguridad</h3>
-              <p>Clínica moderna y equipada</p>
+              <p>Consultorio moderno y equipado</p>
             </div>
           </div>
         </div>

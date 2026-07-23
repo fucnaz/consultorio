@@ -44,6 +44,14 @@ export default function Home({ onViewChange, onSelectSpecialty }) {
       iconName: "Brain",
       value: "psiquiatria",
       whatsappUrl: "https://wa.me/543874812657?text=Hola,%20deseo%20reservar%20un%20turno%20para%20Psiquiatr%C3%ADa"
+    },
+    {
+      title: "Laboratorio NB-LB",
+      description: "Análisis clínicos de rutina y de alta complejidad. Extracciones y entrega de muestras con la mayor rapidez y precisión.",
+      iconName: "FlaskConical",
+      value: "laboratorio",
+      infoText: "Atiende por orden de llegada (07:00 a 11:00 hs)",
+      whatsappUrl: "https://wa.me/5491112345678?text=Hola,%20deseo%20hacer%20una%20consulta%20sobre%20Laboratorio%20NB-LB"
     }
   ];
 

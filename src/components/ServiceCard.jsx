@@ -14,9 +14,11 @@ export default function ServiceCard({ title, description, iconName, onClick, wha
       <h3>{title}</h3>
       <p>{description}</p>
       
-      {infoText ? (
-        <span className="service-card-info-text">{infoText}</span>
-      ) : whatsappUrl ? (
+      {infoText && (
+        <span className="service-card-info-text" style={{ marginBottom: "1rem" }}>{infoText}</span>
+      )}
+
+      {whatsappUrl ? (
         <a 
           href={whatsappUrl} 
           target="_blank" 
@@ -24,15 +26,15 @@ export default function ServiceCard({ title, description, iconName, onClick, wha
           className="service-card-btn whatsapp-btn"
           style={{ textDecoration: "none" }}
         >
-          Reservar por WhatsApp
+          Consultar por WhatsApp
           <Icons.MessageCircle size={16} />
         </a>
-      ) : (
+      ) : !infoText && onClick ? (
         <button onClick={onClick} className="service-card-btn">
           Reservar Turno
           <Icons.ArrowRight size={16} />
         </button>
-      )}
+      ) : null}
 
       <style>{`
         .service-card {
