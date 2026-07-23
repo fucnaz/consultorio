@@ -173,7 +173,7 @@ export default function AppointmentModal({ appointment, onClose, onSave, doctors
         <div className="modal-header">
           <div>
             <h3>Reprogramar Turno</h3>
-            <p className="modal-subtitle">Paciente: {appointment.pacienteNombre}</p>
+            <p className="modal-subtitle">Paciente: {appointment.pacienteNombre} | Cobertura: {appointment.obraSocial || "Particular / Sin Obra Social"}</p>
           </div>
           <button onClick={onClose} className="modal-close-btn">
             <X size={20} />

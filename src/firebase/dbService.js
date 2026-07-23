@@ -81,6 +81,7 @@ const SEED_APPOINTMENTS = [
     pacienteNombre: "Laura Vegas",
     pacienteEmail: "clara.b@example.com",
     pacienteTelefono: "11-2345-6789",
+    obraSocial: "Particular / Sin Obra Social",
     motivo: "Limpieza anual y control de caries",
     estado: "confirmado"
   },
@@ -93,6 +94,7 @@ const SEED_APPOINTMENTS = [
     pacienteNombre: "Ricardo Tapia",
     pacienteEmail: "roberto.g@example.com",
     pacienteTelefono: "11-9876-5432",
+    obraSocial: "Particular / Sin Obra Social",
     motivo: "Chequeo médico de rutina",
     estado: "confirmado"
   },
@@ -105,6 +107,7 @@ const SEED_APPOINTMENTS = [
     pacienteNombre: "Esteban Días",
     pacienteEmail: "esteban@example.com",
     pacienteTelefono: "11-3344-5566",
+    obraSocial: "Particular / Sin Obra Social",
     motivo: "Dolor en muela de juicio",
     estado: "confirmado"
   }

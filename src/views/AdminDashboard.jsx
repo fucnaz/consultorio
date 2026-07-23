@@ -317,6 +317,7 @@ export default function AdminDashboard() {
                     <tr>
                       <th>Fecha y Hora</th>
                       <th>Paciente</th>
+                      <th>Obra Social</th>
                       <th>Contacto</th>
                       <th>Especialista</th>
                       <th>Motivo</th>
@@ -337,6 +338,13 @@ export default function AdminDashboard() {
                           <td>
                             <div className="patient-cell">
                               <strong>{apt.pacienteNombre}</strong>
+                            </div>
+                          </td>
+                          <td>
+                            <div className="insurance-cell">
+                              <span style={{ fontWeight: "500", color: "var(--secondary)" }}>
+                                {apt.obraSocial || "Particular / Sin Obra Social"}
+                              </span>
                             </div>
                           </td>
                           <td>

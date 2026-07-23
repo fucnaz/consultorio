@@ -1,7 +1,7 @@
 // src/views/DoctorDashboard.jsx
 import React, { useState, useEffect } from "react";
 import { dbService } from "../firebase/dbService";
-import { Calendar, User, Phone, Mail, FileText, CheckCircle, Search, RefreshCw, Clock } from "lucide-react";
+import { Calendar, User, Phone, Mail, FileText, CheckCircle, Search, RefreshCw, Clock, Activity } from "lucide-react";
 
 export default function DoctorDashboard({ currentUser }) {
   const [appointments, setAppointments] = useState([]);
@@ -179,6 +179,10 @@ export default function DoctorDashboard({ currentUser }) {
                       <span className="contact-item">
                         <Mail size={14} />
                         {apt.pacienteEmail}
+                      </span>
+                      <span className="contact-item">
+                        <Activity size={14} />
+                        Obra Social: {apt.obraSocial || "Particular / Sin Obra Social"}
                       </span>
                     </div>
                   </div>

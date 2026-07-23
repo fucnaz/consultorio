@@ -1,7 +1,7 @@
 // src/components/BookingForm.jsx
 import React, { useState, useEffect } from "react";
 import { dbService } from "../firebase/dbService";
-import { Calendar as CalendarIcon, Clock, User, Phone, Mail, FileText, CheckCircle, ArrowRight, ArrowLeft } from "lucide-react";
+import { Calendar as CalendarIcon, Clock, User, Phone, Mail, FileText, CheckCircle, ArrowRight, ArrowLeft, Shield } from "lucide-react";
 
 const getLocalDateStr = (d) => {
   if (!d) return "";
@@ -29,6 +29,8 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
   const [patientName, setPatientName] = useState("");
   const [patientEmail, setPatientEmail] = useState("");
   const [patientPhone, setPatientPhone] = useState("");
+  const [selectedObraSocial, setSelectedObraSocial] = useState("Particular / Sin Obra Social");
+  const [customObraSocial, setCustomObraSocial] = useState("");
   const [reason, setReason] = useState("");
   const [currentCalendarDate, setCurrentCalendarDate] = useState(new Date());
 
@@ -305,7 +307,14 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
       return;
     }
 
+    if (selectedObraSocial === "Otro" && !customObraSocial.trim()) {
+      setError("Por favor, especifique su obra social.");
+      return;
+    }
+
     setSubmitting(true);
+
+    const finalObraSocial = selectedObraSocial === "Otro" ? customObraSocial.trim() : selectedObraSocial;
 
     const appointmentData = {
       especialistaId: selectedDoctorId,
@@ -315,6 +324,7 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
       pacienteNombre: patientName,
       pacienteEmail: patientEmail,
       pacienteTelefono: patientPhone,
+      obraSocial: finalObraSocial,
       motivo: reason
     };
 
@@ -342,6 +352,8 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
     setPatientName("");
     setPatientEmail("");
     setPatientPhone("");
+    setSelectedObraSocial("Particular / Sin Obra Social");
+    setCustomObraSocial("");
     setReason("");
     setSuccessData(null);
     if (onBookingSuccess) onBookingSuccess();
@@ -552,6 +564,44 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
           </div>
 
           <div className="form-group">
+            <label className="form-label">Obra Social / Cobertura Médica *</label>
+            <div className="input-with-icon">
+              <Shield size={18} className="input-icon" />
+              <select
+                value={selectedObraSocial}
+                onChange={(e) => setSelectedObraSocial(e.target.value)}
+                className="form-control"
+                required
+              >
+                <option value="Particular / Sin Obra Social">Particular / Sin Obra Social</option>
+                <option value="OSDE">OSDE</option>
+                <option value="Swiss Medical">Swiss Medical</option>
+                <option value="Galeno">Galeno</option>
+                <option value="PAMI">PAMI</option>
+                <option value="OSECAC">OSECAC</option>
+                <option value="Otro">Otro (Especificar)</option>
+              </select>
+            </div>
+          </div>
+
+          {selectedObraSocial === "Otro" && (
+            <div className="form-group animate-fade">
+              <label className="form-label">Especifique su Obra Social *</label>
+              <div className="input-with-icon">
+                <Shield size={18} className="input-icon" />
+                <input
+                  type="text"
+                  value={customObraSocial}
+                  onChange={(e) => setCustomObraSocial(e.target.value)}
+                  placeholder="Ingrese el nombre de su cobertura"
+                  className="form-control"
+                  required
+                />
+              </div>
+            </div>
+          )}
+
+          <div className="form-group">
             <label className="form-label">Motivo de la Consulta (Opcional)</label>
             <div className="input-with-icon align-top">
               <FileText size={18} className="input-icon" />
@@ -612,6 +662,10 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
             <div className="receipt-row border-top">
               <span>Paciente:</span>
               <strong>{successData.pacienteNombre}</strong>
+            </div>
+            <div className="receipt-row">
+              <span>Obra Social:</span>
+              <strong>{successData.obraSocial || "Particular / Sin Obra Social"}</strong>
             </div>
           </div>
 
