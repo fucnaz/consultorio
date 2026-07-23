@@ -4,7 +4,7 @@ import { Calendar, Award, ShieldCheck, Heart } from "lucide-react";
 
 export default function VideoHero({ onNavigateToBooking }) {
   return (
-    <div className="hero-section">
+    <div id="inicio" className="hero-section">
       <video
         className="hero-video"
         autoPlay

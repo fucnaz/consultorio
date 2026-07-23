@@ -16,10 +16,44 @@ export default function Navbar({ currentUser, onLogout, currentView, onViewChang
         <>
           <li>
             <button 
-              onClick={() => handleNavClick("home")} 
+              onClick={() => {
+                handleNavClick("home");
+                setTimeout(() => {
+                  const el = document.getElementById("inicio");
+                  if (el) el.scrollIntoView({ behavior: "smooth" });
+                }, 100);
+              }} 
               className={`nav-link-btn ${currentView === "home" ? "active" : ""}`}
             >
               Inicio
+            </button>
+          </li>
+          <li>
+            <button 
+              onClick={() => {
+                handleNavClick("home");
+                setTimeout(() => {
+                  const el = document.getElementById("especialidades");
+                  if (el) el.scrollIntoView({ behavior: "smooth" });
+                }, 100);
+              }} 
+              className="nav-link-btn"
+            >
+              Especialidades
+            </button>
+          </li>
+          <li>
+            <button 
+              onClick={() => {
+                handleNavClick("home");
+                setTimeout(() => {
+                  const el = document.getElementById("nosotros");
+                  if (el) el.scrollIntoView({ behavior: "smooth" });
+                }, 100);
+              }} 
+              className="nav-link-btn"
+            >
+              Sobre Nosotros
             </button>
           </li>
           <li>

@@ -93,7 +93,7 @@ export default function Home({ onViewChange, onSelectSpecialty }) {
       </section>
 
       {/* Sección Sobre Nosotros */}
-      <section className="section about-section">
+      <section id="nosotros" className="section about-section">
         <div className="container">
           <div className="about-grid">
             <div className="about-image-wrapper">
