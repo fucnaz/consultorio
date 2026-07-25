@@ -61,7 +61,7 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
     while (dates.length < count && safetyCounter < 100) {
       current.setDate(current.getDate() + 1);
       const dayOfWeek = current.getDay(); // 0 = Domingo, 1 = Lunes, etc.
-      
+
       const dateStr = getLocalDateStr(current);
       const onVacation = doc?.vacaciones?.some(
         v => dateStr >= v.inicio && dateStr <= v.fin
@@ -78,27 +78,27 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
   // Generar intervalos de 30 min según el médico y la fecha seleccionada
   const getDoctorTimeSlots = (doc, dateStr) => {
     if (!doc || !dateStr) return [];
-    
+
     const [year, month, day] = dateStr.split("-").map(Number);
     const dayOfWeek = new Date(year, month - 1, day).getDay();
-    
+
     const agenda = doc.agendaSemanal || DEFAULT_AGENDA;
     const config = agenda[dayOfWeek];
     if (!config || !config.activo) return [];
-    
+
     const startStr = config.horaInicio || "09:00";
     const endStr = config.horaFin || "17:00";
-    
+
     const slots = [];
     let [startHour, startMin] = startStr.split(":").map(Number);
     let [endHour, endMin] = endStr.split(":").map(Number);
-    
+
     let current = new Date();
     current.setHours(startHour, startMin, 0, 0);
-    
+
     const endLimit = new Date();
     endLimit.setHours(endHour, endMin, 0, 0);
-    
+
     while (current < endLimit) {
       const hh = String(current.getHours()).padStart(2, '0');
       const mm = String(current.getMinutes()).padStart(2, '0');
@@ -123,25 +123,25 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
   const renderCalendar = () => {
     const year = currentCalendarDate.getFullYear();
     const month = currentCalendarDate.getMonth();
-    
+
     const monthNames = [
       "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
       "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
     ];
-    
+
     const firstDay = new Date(year, month, 1);
     let startDayOfWeek = firstDay.getDay();
     startDayOfWeek = startDayOfWeek === 0 ? 6 : startDayOfWeek - 1; // Mon is 0
-    
+
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    
+
     const days = [];
     for (let i = 0; i < startDayOfWeek; i++) {
       days.push({ dayNum: null, dateStr: null, isEnabled: false });
     }
-    
+
     const enabledDateStrings = businessDays.map(d => getLocalDateStr(d));
-    
+
     for (let d = 1; d <= daysInMonth; d++) {
       const currentDateObj = new Date(year, month, d);
       const dateStr = getLocalDateStr(currentDateObj);
@@ -152,11 +152,11 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
         isEnabled
       });
     }
-    
+
     const handlePrevMonth = () => {
       setCurrentCalendarDate(new Date(year, month - 1, 1));
     };
-    
+
     const handleNextMonth = () => {
       setCurrentCalendarDate(new Date(year, month + 1, 1));
     };
@@ -169,7 +169,7 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
         setSelectedTime("");
       }
     };
-    
+
     return (
       <div className="custom-calendar-container">
         <div className="calendar-header">
@@ -177,12 +177,12 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
           <span className="calendar-month-title">{monthNames[month]} {year}</span>
           <button type="button" onClick={handleNextMonth} className="calendar-nav-btn">&rarr;</button>
         </div>
-        
+
         <div className="calendar-grid">
           {["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"].map(d => (
             <div key={d} className="calendar-weekday-header">{d}</div>
           ))}
-          
+
           {days.map((day, idx) => {
             if (day.dayNum === null) {
               return <div key={idx} className="calendar-day-empty"></div>;
@@ -406,7 +406,7 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
         ctx.arc(65, 70, 30, 0, Math.PI * 2);
         ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
         ctx.fill();
-        
+
         ctx.fillStyle = "#ffffff";
         ctx.fillRect(60, 52, 10, 36);
         ctx.fillRect(47, 65, 36, 10);
@@ -435,7 +435,7 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
       const cardRadius = 12;
 
       drawRoundRect(ctx, boxX, boxY, boxW, boxH, cardRadius);
-      
+
       // Sombra
       ctx.shadowColor = "rgba(15, 23, 42, 0.08)";
       ctx.shadowBlur = 15;
@@ -460,7 +460,7 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
       const codeH = 40;
       const codeX = (canvas.width - codeW) / 2;
       const codeY = boxY + 65;
-      
+
       drawRoundRect(ctx, codeX, codeY, codeW, codeH, 6);
       ctx.fill();
       ctx.lineWidth = 1;
@@ -492,7 +492,7 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
 
       details.forEach((det, idx) => {
         const currentY = startY + (idx * rowGap);
-        
+
         // Círculo decorativo celeste
         ctx.beginPath();
         ctx.arc(startX, currentY - 5, 4, 0, Math.PI * 2);
@@ -547,7 +547,7 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
       console.warn("No se pudo cargar el logo de la clínica para el canvas, usando fallback.");
       startDrawing(null);
     };
-    
+
     // Timeout de seguridad en caso de que la carga de la imagen demore o falle silenciosamente
     setTimeout(() => {
       if (!logoImg.complete) {
@@ -595,11 +595,11 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
         <div className="step-content">
           <h2>Selecciona Especialidad y Médico</h2>
           <p className="step-desc">Elige la especialidad médica que requieres y luego selecciona el doctor de tu preferencia.</p>
-          
+
           <div className="form-group">
             <label className="form-label">Especialidad Médica</label>
-            <select 
-              value={specialty} 
+            <select
+              value={specialty}
               onChange={(e) => setSpecialty(e.target.value)}
               className="form-control"
             >
@@ -616,7 +616,7 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
               <div className="doctor-select-grid">
                 {filteredDoctors.length > 0 ? (
                   filteredDoctors.map(doc => (
-                    <div 
+                    <div
                       key={doc.id}
                       className={`doctor-option-card ${selectedDoctorId === doc.id ? "selected" : ""}`}
                       onClick={() => setSelectedDoctorId(doc.id)}
@@ -638,7 +638,7 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
           )}
 
           <div className="wizard-actions">
-            <button 
+            <button
               onClick={handleNextStep}
               className="btn btn-primary"
               disabled={!specialty || !selectedDoctorId}
@@ -696,8 +696,8 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
               <ArrowLeft size={18} />
               Atrás
             </button>
-            <button 
-              onClick={handleNextStep} 
+            <button
+              onClick={handleNextStep}
               className="btn btn-primary"
               disabled={!selectedDate || !selectedTime}
             >
@@ -719,9 +719,9 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
               <label className="form-label">Nombre Completo *</label>
               <div className="input-with-icon">
                 <User size={18} className="input-icon" />
-                <input 
-                  type="text" 
-                  value={patientName} 
+                <input
+                  type="text"
+                  value={patientName}
                   onChange={(e) => setPatientName(e.target.value)}
                   placeholder="Ej. Ana Pérez"
                   className="form-control"
@@ -734,9 +734,9 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
               <label className="form-label">Teléfono de Contacto *</label>
               <div className="input-with-icon">
                 <Phone size={18} className="input-icon" />
-                <input 
-                  type="tel" 
-                  value={patientPhone} 
+                <input
+                  type="tel"
+                  value={patientPhone}
                   onChange={(e) => setPatientPhone(e.target.value)}
                   placeholder="Ej. 11-1234-5678"
                   className="form-control"
@@ -750,9 +750,9 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
             <label className="form-label">Correo Electrónico *</label>
             <div className="input-with-icon">
               <Mail size={18} className="input-icon" />
-              <input 
-                type="email" 
-                value={patientEmail} 
+              <input
+                type="email"
+                value={patientEmail}
                 onChange={(e) => setPatientEmail(e.target.value)}
                 placeholder="ejemplo@email.com"
                 className="form-control"
@@ -802,15 +802,16 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
           )}
 
           <div className="form-group">
-            <label className="form-label">Motivo de la Consulta (Opcional)</label>
+            <label className="form-label">Motivo de la Consulta *</label>
             <div className="input-with-icon align-top">
               <FileText size={18} className="input-icon" />
-              <textarea 
-                value={reason} 
+              <textarea
+                value={reason}
                 onChange={(e) => setReason(e.target.value)}
                 placeholder="Describa brevemente su consulta médica o síntomas..."
                 className="form-control textarea"
                 rows="3"
+                required
               />
             </div>
           </div>
@@ -820,8 +821,8 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
               <ArrowLeft size={18} />
               Atrás
             </button>
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className="btn btn-accent"
               disabled={submitting}
             >
@@ -839,7 +840,7 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
             <CheckCircle size={56} />
           </div>
           <h2>¡Turno Reservado con Éxito!</h2>
-          <p className="success-desc">Hemos guardado su cita médica. Se ha enviado una confirmación a su correo electrónico.</p>
+          <p className="success-desc">descargue la tarjeta de recordatorio de su turno, tambien le estaremos recordando dias antes sobre su turno.</p>
 
           <div className="receipt-card">
             <h3>Detalles del Turno</h3>
