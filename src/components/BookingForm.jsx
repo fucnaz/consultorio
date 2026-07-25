@@ -772,11 +772,13 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
                 required
               >
                 <option value="Particular / Sin Obra Social">Particular / Sin Obra Social</option>
-                <option value="OSDE">OSDE</option>
+                <option value="IPS">IPS</option>
+                <option value="Boreal">Boreal</option>
                 <option value="Swiss Medical">Swiss Medical</option>
-                <option value="Galeno">Galeno</option>
+                <option value="Medifé">Medifé</option>
+                <option value="Avalian">Avalian</option>
+                <option value="OSDE">OSDE</option>
                 <option value="PAMI">PAMI</option>
-                <option value="OSECAC">OSECAC</option>
                 <option value="Otro">Otro (Especificar)</option>
               </select>
             </div>
