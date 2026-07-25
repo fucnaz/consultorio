@@ -1,7 +1,7 @@
 // src/components/BookingForm.jsx
 import React, { useState, useEffect } from "react";
 import { dbService } from "../firebase/dbService";
-import { Calendar as CalendarIcon, Clock, User, Phone, Mail, FileText, CheckCircle, ArrowRight, ArrowLeft, Shield } from "lucide-react";
+import { Calendar as CalendarIcon, Clock, User, Phone, Mail, FileText, CheckCircle, ArrowRight, ArrowLeft, Shield, Download } from "lucide-react";
 
 const getLocalDateStr = (d) => {
   if (!d) return "";
@@ -359,6 +359,204 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
     if (onBookingSuccess) onBookingSuccess();
   };
 
+  const handleDownloadImage = () => {
+    if (!successData) return;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = 540;
+    canvas.height = 720;
+    const ctx = canvas.getContext("2d");
+
+    // Función para dibujar rectángulos redondeados con soporte multiplataforma
+    const drawRoundRect = (c, x, y, width, height, r) => {
+      c.beginPath();
+      c.moveTo(x + r, y);
+      c.lineTo(x + width - r, y);
+      c.quadraticCurveTo(x + width, y, x + width, y + r);
+      c.lineTo(x + width, y + height - r);
+      c.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
+      c.lineTo(x + r, y + height);
+      c.quadraticCurveTo(x, y + height, x, y + height - r);
+      c.lineTo(x, y + r);
+      c.quadraticCurveTo(x, y, x + r, y);
+      c.closePath();
+    };
+
+    const logoImg = new Image();
+    logoImg.src = "/assets/image/logoicono.png";
+
+    const startDrawing = (img) => {
+      // 1. Fondo de la imagen general
+      ctx.fillStyle = "#f8fafc";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // 2. Banner de encabezado con gradiente (Azul / Celeste)
+      const grad = ctx.createLinearGradient(0, 0, canvas.width, 0);
+      grad.addColorStop(0, "#0e7490"); // Teal oscuro
+      grad.addColorStop(1, "#0ea5e9"); // Celeste brillante
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, canvas.width, 140);
+
+      // Dibujar logo de la clínica si está cargado
+      if (img && img.complete && img.naturalWidth !== 0) {
+        ctx.drawImage(img, 30, 35, 70, 70);
+      } else {
+        // Fallback: Dibujo de cruz médica elegante
+        ctx.beginPath();
+        ctx.arc(65, 70, 30, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
+        ctx.fill();
+        
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(60, 52, 10, 36);
+        ctx.fillRect(47, 65, 36, 10);
+      }
+
+      // Nombre de la marca
+      ctx.fillStyle = "#ffffff";
+      ctx.textAlign = "left";
+      ctx.textBaseline = "middle";
+      ctx.font = "bold 24px 'Outfit', 'Inter', sans-serif";
+      ctx.fillText("Belgrano", 115, 58);
+      ctx.font = "300 24px 'Outfit', 'Inter', sans-serif";
+      ctx.fillText("Salud Integral", 220, 58);
+
+      // Subtítulo de marca
+      ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
+      ctx.font = "500 13px 'Inter', sans-serif";
+      ctx.fillText("Centro de Especialidades Médicas", 115, 90);
+
+      // 3. Tarjeta contenedora de detalles del turno
+      ctx.fillStyle = "#ffffff";
+      const boxX = 25;
+      const boxY = 165;
+      const boxW = canvas.width - (boxX * 2); // 490
+      const boxH = 430;
+      const cardRadius = 12;
+
+      drawRoundRect(ctx, boxX, boxY, boxW, boxH, cardRadius);
+      
+      // Sombra
+      ctx.shadowColor = "rgba(15, 23, 42, 0.08)";
+      ctx.shadowBlur = 15;
+      ctx.shadowOffsetY = 5;
+      ctx.fill();
+      ctx.shadowColor = "transparent"; // Resetear sombra
+
+      // Borde de la tarjeta
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = "#e2e8f0";
+      ctx.stroke();
+
+      // 4. Encabezado interno de la tarjeta
+      ctx.fillStyle = "#0f172a";
+      ctx.textAlign = "center";
+      ctx.font = "bold 20px 'Outfit', 'Inter', sans-serif";
+      ctx.fillText("CONFIRMACIÓN DE TURNO", canvas.width / 2, boxY + 40);
+
+      // Recuadro del Código de Turno
+      ctx.fillStyle = "#f0fdf4"; // Fondo verde claro
+      const codeW = 320;
+      const codeH = 40;
+      const codeX = (canvas.width - codeW) / 2;
+      const codeY = boxY + 65;
+      
+      drawRoundRect(ctx, codeX, codeY, codeW, codeH, 6);
+      ctx.fill();
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = "#bbf7d0";
+      ctx.stroke();
+
+      ctx.fillStyle = "#166534";
+      ctx.font = "bold 13px 'Inter', sans-serif";
+      ctx.fillText(`CÓDIGO DE TURNO: ${successData.id || "N/A"}`, canvas.width / 2, codeY + 22);
+
+      // 5. Lista de detalles
+      ctx.textAlign = "left";
+      const startX = boxX + 35;
+      const startY = boxY + 145;
+      const rowGap = 42;
+
+      const specLabel = specialties.find(s => s.value === successData.especialidad)?.label || successData.especialidad;
+      const formatFecha = successData.fecha.split("-").reverse().join("/");
+      const formatHora = successData.hora === "Orden de llegada" ? successData.hora : `${successData.hora} hs`;
+
+      const details = [
+        { label: "Paciente", val: successData.pacienteNombre },
+        { label: "Especialista", val: successData.doctorNombre },
+        { label: "Especialidad", val: specLabel },
+        { label: "Fecha de la cita", val: formatFecha },
+        { label: "Horario", val: formatHora },
+        { label: "Obra Social", val: successData.obraSocial || "Particular / Sin Obra Social" }
+      ];
+
+      details.forEach((det, idx) => {
+        const currentY = startY + (idx * rowGap);
+        
+        // Círculo decorativo celeste
+        ctx.beginPath();
+        ctx.arc(startX, currentY - 5, 4, 0, Math.PI * 2);
+        ctx.fillStyle = "#0ea5e9";
+        ctx.fill();
+
+        // Etiqueta (Label)
+        ctx.fillStyle = "#64748b";
+        ctx.font = "600 11px 'Inter', sans-serif";
+        ctx.fillText(det.label.toUpperCase(), startX + 15, currentY - 5);
+
+        // Valor (Value)
+        ctx.fillStyle = "#0f172a";
+        ctx.font = "bold 14px 'Inter', sans-serif";
+        ctx.fillText(det.val, startX + 170, currentY - 5);
+
+        // Línea divisora
+        if (idx < details.length - 1) {
+          ctx.beginPath();
+          ctx.moveTo(startX, currentY + 16);
+          ctx.lineTo(boxX + boxW - 35, currentY + 16);
+          ctx.strokeStyle = "#f1f5f9";
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+      });
+
+      // 6. Pie de página de la tarjeta
+      ctx.fillStyle = "#64748b";
+      ctx.textAlign = "center";
+      ctx.font = "500 12px 'Inter', sans-serif";
+      ctx.fillText("Por favor, concurra 10 minutos antes del horario indicado.", canvas.width / 2, boxY + boxH + 35);
+      ctx.fillText("Para cancelaciones o modificaciones, contáctenos al consultorio.", canvas.width / 2, boxY + boxH + 52);
+
+      // Copyright / Marca de agua inferior
+      ctx.fillStyle = "#cbd5e1";
+      ctx.font = "bold 10px 'Outfit', 'Inter', sans-serif";
+      ctx.fillText("Belgrano Salud Integral © 2026", canvas.width / 2, canvas.height - 25);
+
+      // 7. Descarga del archivo
+      const link = document.createElement("a");
+      link.download = `Turno_BelgranoSalud_${formatFecha.replace(/\//g, "-")}.png`;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    };
+
+    // Control de carga del Logo de la clínica
+    logoImg.onload = () => {
+      startDrawing(logoImg);
+    };
+    logoImg.onerror = () => {
+      console.warn("No se pudo cargar el logo de la clínica para el canvas, usando fallback.");
+      startDrawing(null);
+    };
+    
+    // Timeout de seguridad en caso de que la carga de la imagen demore o falle silenciosamente
+    setTimeout(() => {
+      if (!logoImg.complete) {
+        console.warn("Timeout cargando el logo de la clínica para el canvas, procediendo con fallback.");
+        startDrawing(null);
+      }
+    }, 300);
+  };
+
   if (loading) {
     return (
       <div className="booking-loading glass-card">
@@ -669,9 +867,15 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
             </div>
           </div>
 
-          <button onClick={handleReset} className="btn btn-secondary">
-            Reservar Otro Turno
-          </button>
+          <div className="success-actions">
+            <button onClick={handleDownloadImage} className="btn btn-accent">
+              <Download size={18} />
+              Descargar Recordatorio
+            </button>
+            <button onClick={handleReset} className="btn btn-secondary">
+              Reservar Otro Turno
+            </button>
+          </div>
         </div>
       )}
 
@@ -1029,6 +1233,26 @@ export default function BookingForm({ initialSpecialty = "", onBookingSuccess })
           border-color: var(--primary) !important;
           font-weight: 700;
           box-shadow: 0 4px 12px rgba(14, 165, 233, 0.25);
+        }
+        .success-actions {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 1rem;
+          margin-top: 2rem;
+        }
+        .success-actions .btn {
+          min-width: 220px;
+        }
+        @media (max-width: 576px) {
+          .success-actions {
+            flex-direction: column;
+            width: 100%;
+          }
+          .success-actions .btn {
+            width: 100%;
+            max-width: 320px;
+          }
         }
       `}</style>
     </div>
